@@ -9,6 +9,7 @@ import (
 
 func main() {
     database := db.OpenDB()
+    // defer is cool
     defer db.CloseDB(database)
 
     // create tables if necessary
