@@ -4,24 +4,24 @@ import (
     "database/sql"
     "fmt"
     _ "github.com/glebarez/go-sqlite"
+    _ "github.com/google/uuid"
     "log"
     _ "log"
 )
 
-func initDB() {
+func openDB() *sql.DB {
     db, err := sql.Open("sqlite", "./local.db")
     if err != nil {
         log.Fatal(err)
-        return
+        return nil
     }
+    return db
+}
 
-
-    defer closeDB(db)
-
-    err = createTables(db)
+func initDB(db *sql.DB) {
+    err := createTables(db)
     if err != nil {
         log.Fatal(err)
-        return
     }
 }
 
@@ -48,12 +48,12 @@ func createTables(db *sql.DB) error {
 
     createEntity := `create table if not exists entity (
             id text not null,
-            created_by text not null,
-            name text not null unique,
+            creator_id text not null,
+            name text not null,
             type text not null,
             details text,
-            primary key (id, created_by),
-            foreign key (created_by)
+            primary key (id, creator_id),
+            foreign key (creator_id)
                 references user (id),
             foreign key (type)
                 references entity_type (name)
@@ -66,14 +66,14 @@ func createTables(db *sql.DB) error {
 
     createConnection := `create table if not exists connection (
             id text not null,
-            created_by text not null,
-            from text not null,
-            to text not null,
-            by text,
-            start text,
-            end text,
+            creator_id text not null,
+            entity_a text not null,
+            entity_b text not null,
+            connecting_entity text,
+            start_date text,
+            end_date text,
             details text,
-            primary key (id, created_by)
+            primary key (id, creator_id)
         );`
 
     _, err = db.Exec(createConnection)
@@ -82,9 +82,10 @@ func createTables(db *sql.DB) error {
     }
 
     createDuplicates := `create table if not exists duplicates (
-            id text primary key,
-            created_by text primary key,
-            duplicate_ids text not null
+            id text not null,
+            creator_id text not null,
+            duplicate_ids text not null,
+            primary key (id, creator_id)
         );`
 
     _, err = db.Exec(createDuplicates)
@@ -95,13 +96,6 @@ func createTables(db *sql.DB) error {
     return nil
 }
 
-func insertTestData() {
-    insertUser := "insert into user (id, name) values ()"
-}
-
-func verifyTestData() {
-
-}
 
 func closeDB(db *sql.DB) {
     err := db.Close()

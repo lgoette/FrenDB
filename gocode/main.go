@@ -6,7 +6,12 @@ import (
 
 
 func main() {
-    initDB()
+    db := openDB()
+    defer closeDB(db)
 
+    // create tables if necessary
+    initDB(db)
     
+    // run some tests
+    testDb(db)
 }
