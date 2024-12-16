@@ -5,7 +5,7 @@ import (
     "fmt"
     "frenDB/data"
     _ "github.com/glebarez/go-sqlite"
-    _ "github.com/google/uuid"
+    "github.com/google/uuid"
     "log"
     _ "log"
 )
@@ -40,7 +40,7 @@ func TestDb(db *sql.DB)  {
 func insertTestData(db *sql.DB) (int64, error) {
     fmt.Println("inserting user with name = testName into users")
     u := data.User{}
-    u.Id = "testID"
+    u.Id = uuid.New()
     u.Name = "testName"
     insertUser :=  `insert into user (id, name) values (?, ?);`
     res, err := db.Exec(insertUser, u.Id, u.Name)

@@ -1,6 +1,9 @@
 package data
+import (
+	"github.com/google/uuid"
+)
 
 type User struct {
-	Id string
+	Id uuid.UUID
 	Name string
 }
