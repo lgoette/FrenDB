@@ -25,5 +25,4 @@ go.work.sum
 .env
 
 # Ours
-**/.fleet/
-**/local.db
+local.db
