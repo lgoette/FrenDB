@@ -9,8 +9,8 @@ import (
     _ "log"
 )
 
-func OpenDB() *sql.DB {
-    db, err := sql.Open("sqlite", "./local.db")
+func OpenDB(name string) *sql.DB {
+    db, err := sql.Open("sqlite", name)
     if err != nil {
         log.Fatal(err)
         return nil
@@ -74,6 +74,12 @@ func createTables(db *sql.DB) error {
             end_date text,
             details text,
             primary key (id, creator_id)
+            foreign key (entity_a)
+                references entity (id)
+            foreign key (entity_b)
+                references entity (id)
+            foreign key (connecting_entity)
+                references entity (id)
         );`
 
     _, err = db.Exec(createConnection)
@@ -81,14 +87,15 @@ func createTables(db *sql.DB) error {
         return err
     }
 
-    createDuplicates := `create table if not exists duplicates (
+    createDuplicateEntities := `create table if not exists duplicate_entities (
             id text not null,
             creator_id text not null,
-            duplicate_ids text not null,
-            primary key (id, creator_id)
+            entity_id text not null,
+            duplicate_entity_id text not null,
+            primary key (id, creator_id, entity_id, duplicate_entity_id)
         );`
 
-    _, err = db.Exec(createDuplicates)
+    _, err = db.Exec(createDuplicateEntities)
     if err != nil {
         return err
     }
