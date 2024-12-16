@@ -1,4 +1,4 @@
-package main
+package test
 
 import (
     "database/sql"
@@ -10,7 +10,7 @@ import (
     _ "log"
 )
 
-func testDb(db *sql.DB)  {
+func TestDb(db *sql.DB)  {
 	_, err := insertTestData(db)
     if err != nil {
         log.Fatal(err)

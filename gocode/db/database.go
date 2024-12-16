@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
     "database/sql"
@@ -9,7 +9,7 @@ import (
     _ "log"
 )
 
-func openDB() *sql.DB {
+func OpenDB() *sql.DB {
     db, err := sql.Open("sqlite", "./local.db")
     if err != nil {
         log.Fatal(err)
@@ -18,7 +18,7 @@ func openDB() *sql.DB {
     return db
 }
 
-func initDB(db *sql.DB) {
+func InitDB(db *sql.DB) {
     err := createTables(db)
     if err != nil {
         log.Fatal(err)
@@ -97,7 +97,7 @@ func createTables(db *sql.DB) error {
 }
 
 
-func closeDB(db *sql.DB) {
+func CloseDB(db *sql.DB) {
     err := db.Close()
     if err != nil {
         fmt.Println(err)

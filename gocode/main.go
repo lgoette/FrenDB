@@ -1,17 +1,19 @@
 package main
 
 import (
+    "frenDB/db"
+    "frenDB/test"
     _ "github.com/glebarez/go-sqlite"
 )
 
 
 func main() {
-    db := openDB()
-    defer closeDB(db)
+    database := db.OpenDB()
+    defer db.CloseDB(database)
 
     // create tables if necessary
-    initDB(db)
+    db.InitDB(database)
     
     // run some tests
-    testDb(db)
+    test.TestDb(database)
 }
