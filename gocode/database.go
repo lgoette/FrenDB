@@ -47,11 +47,12 @@ func createTables(db *sql.DB) error {
     }
 
     createEntity := `create table if not exists entity (
-            id text primary key,
-            created_by text primary key,
+            id text not null,
+            created_by text not null,
             name text not null unique,
             type text not null,
             details text,
+            primary key (id, created_by),
             foreign key (created_by)
                 references user (id),
             foreign key (type)
@@ -64,14 +65,15 @@ func createTables(db *sql.DB) error {
     }
 
     createConnection := `create table if not exists connection (
-            id text primary key,
-            created_by text primary key,
+            id text not null,
+            created_by text not null,
             from text not null,
             to text not null,
             by text,
             start text,
             end text,
-            details text
+            details text,
+            primary key (id, created_by)
         );`
 
     _, err = db.Exec(createConnection)
